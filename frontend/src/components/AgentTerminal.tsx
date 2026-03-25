@@ -41,13 +41,29 @@ const AgentTerminal = ({ targetName, isRunning, onComplete }: AgentTerminalProps
         try {
           const payload = JSON.parse(event.data);
           let extractedData = null;
-          if (payload.result?.phase_3?.embedded_json) {
-            extractedData = payload.result.phase_3.embedded_json;
-          } else if (payload.result?.phase_3) {
-            extractedData = payload.result.phase_3;
-          } else if (payload.result) {
-            extractedData = payload.result;
+          
+          // Recursive search for the actual dossier data because LLM keys can fluctuate
+          const findDossier = (obj: any): any => {
+            if (!obj || typeof obj !== 'object') return null;
+            if (obj.target_company && obj.risk_level) return obj; // Found the core object!
+            for (const key in obj) {
+              const res = findDossier(obj[key]);
+              if (res) return res;
+            }
+            return null;
+          };
+          
+          // First try to find the dossier object organically
+          extractedData = findDossier(payload.result);
+          
+          // Fallback if structured slightly differently
+          if (!extractedData) {
+              extractedData = payload.result?.phase_3?.embedded_json || 
+                              payload.result?.phase_3 || 
+                              payload.result?.phase3 || 
+                              payload.result;
           }
+
           if (extractedData) onComplete(extractedData);
         } catch (e) {
           console.error("Parse error", e);

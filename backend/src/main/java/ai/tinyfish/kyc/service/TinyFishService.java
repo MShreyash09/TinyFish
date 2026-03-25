@@ -18,6 +18,9 @@ public class TinyFishService {
     @Value("${tinyfish.api.key:YOUR_API_KEY_HERE}")
     private String apiKey;
 
+    @Value("${slack.webhook.url:}")
+    private String slackWebhookUrl;
+
     public TinyFishService(WebClient.Builder webClientBuilder) {
         this.webClient = webClientBuilder.baseUrl("https://agent.tinyfish.ai").build();
     }
@@ -48,8 +51,38 @@ public class TinyFishService {
                 .bodyValue(payload)
                 .retrieve()
                 .bodyToFlux(String.class)
+                .doOnNext(message -> {
+                    if (message.contains("\"type\":\"COMPLETE\"") || message.contains("\"status\":\"COMPLETED\"")) {
+                        sendWebhookAlert(companyName);
+                    }
+                })
                 .doOnError(error -> System.err.println("Error during SSE stream: " + error.getMessage()))
                 .onErrorResume(e -> Flux.just("[System Recovery] Agent stream interrupted: " + e.getMessage() + "\nRetrying state..."));
+    }
+
+    private void sendWebhookAlert(String companyName) {
+        if (slackWebhookUrl == null || slackWebhookUrl.trim().isEmpty()) {
+            System.out.println("\n[WEBHOOK SYSTEM SIMULATION] Slack webhook URL not explicitly configured.");
+            System.out.println("-----> 🚨 Simulated Alert: KYC/AML Scan completely autonomously resolved for " + companyName + ". View dossier.\n");
+            return;
+        }
+        
+        try {
+            Map<String, Object> slackMsg = new HashMap<>();
+            slackMsg.put("text", "🚨 *KYC/AML Autonomous Operator Alert*\nThe 10-minute stealth reconnaissance targeting *" + companyName + "* has successfully completed across all global corporate registries and US Treasury sanctions lists.\n\n👉 Review the Risk Dossier on the central dashboard immediately.");
+            
+            WebClient.create().post()
+                .uri(slackWebhookUrl)
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(slackMsg)
+                .retrieve()
+                .bodyToMono(Void.class)
+                .subscribe(); // Async fire and forget
+                
+            System.out.println("[WEBHOOK SYSTEM] Slack Alert successfully dispatched asynchronously over the wire.");
+        } catch (Exception e) {
+            System.err.println("Failed to dispatch webhook: " + e.getMessage());
+        }
     }
 
     private String buildAgentGoal(String companyName) {

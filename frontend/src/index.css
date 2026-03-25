@@ -231,6 +231,22 @@ body {
   color: var(--text-muted);
 }
 
+.btn-pdf {
+  background: var(--accent-color);
+  color: var(--bg-dark);
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-pdf:hover {
+  box-shadow: 0 0 10px var(--accent-glow);
+  transform: translateY(-1px);
+}
+
 .dossier-header {
   display: flex;
   justify-content: space-between;
