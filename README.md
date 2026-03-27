@@ -67,10 +67,3 @@ npm run dev
 Navigate to `http://localhost:3000`, punch in a target corporate entity (e.g. `Tesla`), hit **Launch Recon**, and watch the live WebFlux SSE stream stream the agent's actions straight onto your terminal screen.
 
 ---
-
-**Built with 💻 for the TinyFish HackerEarth Hackathon.**
-
-## Team Members
-1. Gaurav Jadhav
-2. Shreyash Mandlapure
-3. Shahshank Mourya
