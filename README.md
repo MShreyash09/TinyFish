@@ -4,7 +4,7 @@
 [![Java](https://img.shields.io/badge/Java-Spring%20Boot%203.2-orange.svg)](#)
 [![WebFlux](https://img.shields.io/badge/Architecture-Reactive%20%28SSE%29-blue.svg)](#)
 [![React](https://img.shields.io/badge/Frontend-React%20%2B%20Vite-blue.svg)](#)
-[![Status](https://img.shields.io/badge/Status-Hackathon%20Ready-success.svg)](#)
+[![Status](https://img.shields.io/badge/Status-%20Ready-success.svg)](#)
 
 > Transforming a multi-billion dollar manual compliance bottleneck into a 40-second autonomous workflow using Agentic Web Architecture.
 
