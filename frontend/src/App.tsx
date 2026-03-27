@@ -11,6 +11,11 @@ function App() {
     setActiveTargets([targetName]);
   };
 
+  const handleClear = () => {
+    setTargetName('');
+    setActiveTargets([]);
+  };
+
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -53,6 +58,14 @@ function App() {
           disabled={!targetName.trim()}
         >
           Launch Single Recon
+        </button>
+
+        <button 
+          className="btn" 
+          onClick={handleClear} 
+          style={{ marginLeft: '10px', backgroundColor: 'transparent', borderColor: '#ef4444', color: '#ef4444' }}
+        >
+          Clear
         </button>
 
         <div style={{ width: '1px', height: '30px', background: 'var(--border-color)', margin: '0 1rem' }}></div>

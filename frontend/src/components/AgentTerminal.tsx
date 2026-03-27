@@ -1,3 +1,4 @@
+/// <reference types="vite/client" />
 import { useEffect, useState, useRef } from 'react';
 
 interface AgentTerminalProps {
@@ -27,8 +28,9 @@ const AgentTerminal = ({ targetName, isRunning, onComplete }: AgentTerminalProps
 
     setLogs(['[SYSTEM] Initializing TinyFish Stealth Browser...', `[SYSTEM] Target Acquired: ${targetName}`, '[SYSTEM] Establishing secure SSE connection to orchestration backend...']);
 
-    // Assuming backend runs on 8080
-    const es = new EventSource(`http://localhost:8080/api/kyc/investigate?company=${encodeURIComponent(targetName)}`);
+    // Dynamically connect to the Production Backend OR Local Dev Server 
+    const backendUrl = import.meta.env.VITE_API_URL || 'http://localhost:8080';
+    const es = new EventSource(`${backendUrl}/api/kyc/investigate?company=${encodeURIComponent(targetName)}`);
     eventSourceRef.current = es;
 
     es.onmessage = (event) => {
