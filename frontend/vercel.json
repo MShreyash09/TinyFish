@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/api/kyc/:path*",
+      "destination": "http://YOUR_EC2_PUBLIC_IP:8080/api/kyc/:path*"
+    }
+  ]
+}
