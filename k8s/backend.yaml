@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kyc-backend
+  labels:
+    app: kyc-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kyc-backend
+  template:
+    metadata:
+      labels:
+        app: kyc-backend
+    spec:
+      containers:
+      - name: backend
+        image: tinyfish-backend:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8080
+        env:
+        - name: TINYFISH_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: tinyfish-secrets
+              key: api-key
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kyc-backend
+spec:
+  type: NodePort
+  ports:
+  - port: 8080
+    targetPort: 8080
+    nodePort: 30080
+  selector:
+    app: kyc-backend

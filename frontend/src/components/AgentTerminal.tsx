@@ -29,7 +29,9 @@ const AgentTerminal = ({ targetName, isRunning, onComplete }: AgentTerminalProps
     setLogs(['[SYSTEM] Initializing TinyFish Stealth Browser...', `[SYSTEM] Target Acquired: ${targetName}`, '[SYSTEM] Establishing secure SSE connection to orchestration backend...']);
 
     // Dynamically connect to the Production Backend OR Local Dev Server 
-    const backendUrl = import.meta.env.VITE_API_URL || 'http://localhost:8080';
+    const isRelative = import.meta.env.VITE_USE_RELATIVE_API === 'true';
+    const backendUrl = isRelative ? '' : (import.meta.env.VITE_API_URL || 'http://localhost:8080');
+    
     const es = new EventSource(`${backendUrl}/api/kyc/investigate?company=${encodeURIComponent(targetName)}`);
     eventSourceRef.current = es;
 
